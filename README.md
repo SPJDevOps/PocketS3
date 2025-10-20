@@ -2,7 +2,8 @@
 
 A simple, modern web-based S3 browser that allows you to browse, upload, download, and manage files in any S3-compatible storage service.
 
-![PocketS3](https://img.shields.io/badge/docker-ready-blue.svg)
+![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
+[![GitHub Container Registry](https://img.shields.io/badge/ghcr-available-green.svg)](https://github.com/users/YOUR-USERNAME/packages/container/package/s3-browser)
 
 ## Features
 
