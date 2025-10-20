@@ -39,16 +39,19 @@ Edit `.env` file:
 ```env
 # For AWS S3 (default)
 S3_ENDPOINT=
+S3_REGION=us-east-1
 S3_ACCESS_KEY=your-aws-access-key
 S3_SECRET_KEY=your-aws-secret-key
 
 # For MinIO
 S3_ENDPOINT=http://localhost:9000
+S3_REGION=
 S3_ACCESS_KEY=minioadmin
 S3_SECRET_KEY=minioadmin
 
 # For DigitalOcean Spaces
 S3_ENDPOINT=https://nyc3.digitaloceanspaces.com
+S3_REGION=nyc3
 S3_ACCESS_KEY=your-spaces-key
 S3_SECRET_KEY=your-spaces-secret
 ```

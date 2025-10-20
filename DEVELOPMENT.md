@@ -26,6 +26,7 @@ pip install -r requirements.txt
 
 # Set environment variables
 export S3_ENDPOINT=""  # Leave empty for AWS S3
+export S3_REGION=""    # Optional, AWS region
 export S3_ACCESS_KEY="your-access-key"
 export S3_SECRET_KEY="your-secret-key"
 
@@ -72,6 +73,7 @@ docker run -d \
 Then set your environment variables:
 ```bash
 export S3_ENDPOINT="http://localhost:9000"
+export S3_REGION=""
 export S3_ACCESS_KEY="minioadmin"
 export S3_SECRET_KEY="minioadmin"
 ```

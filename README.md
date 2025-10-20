@@ -29,6 +29,7 @@ cp env.example .env
 3. Edit `.env` and add your credentials:
 ```env
 S3_ENDPOINT=              # Leave empty for AWS S3, or add your endpoint
+S3_REGION=                # AWS region (optional), e.g., us-east-1
 S3_ACCESS_KEY=your-key    # Your S3 access key
 S3_SECRET_KEY=your-secret # Your S3 secret key
 ```
@@ -51,6 +52,7 @@ docker build -t pockets3 .
 docker run -d \
   -p 8080:8080 \
   -e S3_ENDPOINT="" \
+  -e S3_REGION="" \
   -e S3_ACCESS_KEY="your-access-key" \
   -e S3_SECRET_KEY="your-secret-key" \
   --name pockets3 \
@@ -73,6 +75,7 @@ pip install -r requirements.txt
 
 # Set environment variables
 export S3_ENDPOINT=""  # optional, for non-AWS S3
+export S3_REGION=""    # optional, AWS region
 export S3_ACCESS_KEY="your-key"
 export S3_SECRET_KEY="your-secret"
 
@@ -97,6 +100,7 @@ The frontend will be available at `http://localhost:5173` and will proxy API req
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `S3_ENDPOINT` | No | S3 endpoint URL. Leave empty for AWS S3. For MinIO use `http://localhost:9000`, for DigitalOcean Spaces use `https://nyc3.digitaloceanspaces.com` |
+| `S3_REGION` | No | AWS region (e.g., `us-east-1`, `eu-west-1`). Required for some AWS S3 buckets, optional for most S3-compatible services |
 | `S3_ACCESS_KEY` | Yes | Your S3 access key ID |
 | `S3_SECRET_KEY` | Yes | Your S3 secret access key |
 
@@ -107,6 +111,7 @@ PocketS3 works with any S3-compatible storage:
 **AWS S3**
 ```env
 S3_ENDPOINT=
+S3_REGION=us-east-1
 S3_ACCESS_KEY=your-aws-key
 S3_SECRET_KEY=your-aws-secret
 ```
@@ -114,6 +119,7 @@ S3_SECRET_KEY=your-aws-secret
 **MinIO**
 ```env
 S3_ENDPOINT=http://localhost:9000
+S3_REGION=
 S3_ACCESS_KEY=minioadmin
 S3_SECRET_KEY=minioadmin
 ```
@@ -121,6 +127,7 @@ S3_SECRET_KEY=minioadmin
 **DigitalOcean Spaces**
 ```env
 S3_ENDPOINT=https://nyc3.digitaloceanspaces.com
+S3_REGION=nyc3
 S3_ACCESS_KEY=your-spaces-key
 S3_SECRET_KEY=your-spaces-secret
 ```
@@ -128,6 +135,7 @@ S3_SECRET_KEY=your-spaces-secret
 **Backblaze B2**
 ```env
 S3_ENDPOINT=https://s3.us-west-001.backblazeb2.com
+S3_REGION=us-west-001
 S3_ACCESS_KEY=your-b2-key
 S3_SECRET_KEY=your-b2-secret
 ```
