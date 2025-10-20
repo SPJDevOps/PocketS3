@@ -104,6 +104,7 @@ The frontend will be available at `http://localhost:5173` and will proxy API req
 | `S3_REGION` | No | AWS region (e.g., `us-east-1`, `eu-west-1`). Required for some AWS S3 buckets, optional for most S3-compatible services |
 | `S3_ACCESS_KEY` | Yes | Your S3 access key ID |
 | `S3_SECRET_KEY` | Yes | Your S3 secret access key |
+| `AWS_CA_BUNDLE` | No | Path to custom CA certificate bundle for SSL/TLS verification (e.g., `/path/to/mycorp-ca.pem`). Use this when connecting to S3 endpoints with self-signed or corporate CA certificates |
 
 ### S3-Compatible Services
 
@@ -140,6 +141,42 @@ S3_REGION=us-west-001
 S3_ACCESS_KEY=your-b2-key
 S3_SECRET_KEY=your-b2-secret
 ```
+
+### Custom CA Certificates
+
+If you're connecting to an S3-compatible service that uses self-signed certificates or a corporate Certificate Authority (CA), you can configure the application to trust your custom CA bundle:
+
+**Development:**
+```bash
+export AWS_CA_BUNDLE=/path/to/mycorp-ca.pem
+uvicorn main:app --reload --port 8000
+```
+
+**Docker:**
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -e S3_ENDPOINT="https://minio.corp.local:9000" \
+  -e S3_ACCESS_KEY="your-key" \
+  -e S3_SECRET_KEY="your-secret" \
+  -e AWS_CA_BUNDLE=/certs/mycorp-ca.pem \
+  -v /path/to/local/certs:/certs:ro \
+  --name pockets3 \
+  pockets3
+```
+
+**Docker Compose:**
+```yaml
+services:
+  pockets3:
+    # ... other configuration ...
+    environment:
+      - AWS_CA_BUNDLE=/certs/mycorp-ca.pem
+    volumes:
+      - /path/to/local/certs:/certs:ro
+```
+
+The `AWS_CA_BUNDLE` environment variable is recognized by boto3 (the AWS SDK for Python) and ensures all SSL/TLS connections use your specified CA bundle for certificate verification.
 
 ## Usage
 
