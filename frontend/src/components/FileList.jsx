@@ -134,14 +134,14 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
   }
 
   return (
-    <div className="overflow-x-auto -mx-2">
+    <div className="overflow-x-auto">
       <table className="table">
         <thead>
           <tr>
-            <th className="px-4 py-3">Name</th>
-            <th className="px-4 py-3">Size</th>
-            <th className="px-4 py-3">Last Modified</th>
-            <th className="px-4 py-3">Actions</th>
+            <th className="px-6 py-4">Name</th>
+            <th className="px-6 py-4">Size</th>
+            <th className="px-6 py-4">Last Modified</th>
+            <th className="px-6 py-4">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -152,7 +152,7 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
 
             return (
               <tr key={item.key} className="hover:bg-base-200 transition-colors">
-                <td className="px-4 py-3">
+                <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     {item.type === 'folder' ? (
                       <>
@@ -176,10 +176,10 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
                     )}
                   </div>
                 </td>
-                <td className="px-4 py-3">{item.type === 'file' ? formatSize(item.size) : '—'}</td>
-                <td className="px-4 py-3">{item.type === 'file' ? formatDate(item.lastModified) : '—'}</td>
-                <td className="px-4 py-3">
-                  <div className="flex gap-1">
+                <td className="px-6 py-4">{item.type === 'file' ? formatSize(item.size) : '—'}</td>
+                <td className="px-6 py-4">{item.type === 'file' ? formatDate(item.lastModified) : '—'}</td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
                     {item.type === 'file' && (
                       <button 
                         className="btn btn-ghost btn-sm"

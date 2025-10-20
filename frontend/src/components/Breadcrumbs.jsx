@@ -2,8 +2,8 @@ export default function Breadcrumbs({ currentPath, onNavigate }) {
   const parts = currentPath ? currentPath.split('/').filter(Boolean) : [];
   
   return (
-    <div className="text-sm breadcrumbs">
-      <ul>
+    <div className="breadcrumbs">
+      <ul className="text-sm">
         <li>
           <a onClick={() => onNavigate('')} className="link link-hover">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 stroke-current">

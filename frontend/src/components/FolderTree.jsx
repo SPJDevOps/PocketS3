@@ -88,10 +88,10 @@ export default function FolderTree({ bucket, currentPath, onNavigate }) {
   }
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       {/* Root folder */}
       <div
-        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-base-200 transition-colors ${
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer hover:bg-base-200 transition-colors ${
           currentPath === '' ? 'bg-primary text-primary-content' : ''
         }`}
         onClick={() => onNavigate('')}
@@ -116,10 +116,10 @@ export default function FolderTree({ bucket, currentPath, onNavigate }) {
         return (
           <div
             key={folder.path}
-            className={`flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer hover:bg-base-200 transition-colors ${
+            className={`flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer hover:bg-base-200 transition-colors ${
               isSelected ? 'bg-primary text-primary-content' : ''
             }`}
-            style={{ paddingLeft: `${folder.level * 16 + 12}px` }}
+            style={{ paddingLeft: `${folder.level * 20 + 16}px` }}
             onClick={() => onNavigate(folder.path)}
           >
             {hasChildren && (
