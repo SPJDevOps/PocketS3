@@ -10,11 +10,11 @@ RUN npm run build
 FROM python:3.13-slim
 WORKDIR /app
 
-# Copy backend code and requirements
-COPY backend ./backend
+COPY backend/requirements.txt ./backend/requirements.txt
 
-# Install Python dependencies
 RUN pip install --no-cache-dir -r backend/requirements.txt
+
+COPY backend ./backend
 
 # Copy built frontend
 COPY --from=frontend /app/frontend/dist ./frontend/dist
