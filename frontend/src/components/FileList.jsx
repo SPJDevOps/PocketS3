@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export default function FileList({ bucket, currentPath, onNavigate, refreshTrigger }) {
+export default function FileList({ bucket, currentPath, onNavigate, refreshTrigger, searchQuery }) {
   const [files, setFiles] = useState([]);
   const [folders, setFolders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,15 +15,23 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
       setFolders([]);
       setError(null);
     }
-  }, [bucket, currentPath, refreshTrigger]);
+  }, [bucket, currentPath, refreshTrigger, searchQuery]);
 
   const fetchObjects = async () => {
     try {
       setLoading(true);
       setError(null);
-      const url = currentPath 
-        ? `/api/buckets/${bucket}/objects?prefix=${encodeURIComponent(currentPath)}`
-        : `/api/buckets/${bucket}/objects`;
+      
+      let url;
+      if (searchQuery && searchQuery.trim()) {
+        // Search mode - search across entire bucket
+        url = `/api/buckets/${bucket}/search?query=${encodeURIComponent(searchQuery)}`;
+      } else {
+        // Normal browse mode - list current folder
+        url = currentPath 
+          ? `/api/buckets/${bucket}/objects?prefix=${encodeURIComponent(currentPath)}`
+          : `/api/buckets/${bucket}/objects`;
+      }
       
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch objects');
@@ -122,19 +130,29 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
     ...files.map(f => ({ ...f, type: 'file' }))
   ];
 
+  const isSearchMode = searchQuery && searchQuery.trim();
+
   if (allItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-base-content/50">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-16 h-16 stroke-current mb-4">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
         </svg>
-        <p>This folder is empty</p>
+        <p>{isSearchMode ? 'No results found' : 'This folder is empty'}</p>
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
+      {isSearchMode && (
+        <div className="alert alert-info mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current shrink-0 w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>Searching across entire bucket - showing {allItems.length} result{allItems.length !== 1 ? 's' : ''}</span>
+        </div>
+      )}
       <table className="table">
         <thead>
           <tr>
@@ -146,9 +164,12 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
         </thead>
         <tbody>
           {allItems.map((item) => {
-            const displayName = item.type === 'folder' 
-              ? item.key.split('/').filter(Boolean).pop()
-              : item.key.split('/').pop();
+            // In search mode, show full path; in browse mode, show just the name
+            const displayName = isSearchMode 
+              ? item.key
+              : (item.type === 'folder' 
+                  ? item.key.split('/').filter(Boolean).pop()
+                  : item.key.split('/').pop());
 
             return (
               <tr key={item.key} className="hover:bg-base-200 transition-colors">
@@ -160,7 +181,7 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
                         </svg>
                         <button 
-                          className="link link-hover font-medium text-left"
+                          className="link link-hover font-medium text-left break-all"
                           onClick={() => onNavigate(item.key)}
                         >
                           {displayName}
@@ -171,7 +192,7 @@ export default function FileList({ bucket, currentPath, onNavigate, refreshTrigg
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-5 h-5 stroke-current text-info flex-shrink-0">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                         </svg>
-                        <span>{displayName}</span>
+                        <span className="break-all">{displayName}</span>
                       </>
                     )}
                   </div>

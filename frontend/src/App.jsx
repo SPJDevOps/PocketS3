@@ -4,24 +4,32 @@ import Breadcrumbs from './components/Breadcrumbs';
 import FolderTree from './components/FolderTree';
 import FileList from './components/FileList';
 import UploadZone from './components/UploadZone';
+import SearchBar from './components/SearchBar';
 import './App.css';
 
 function App() {
   const [selectedBucket, setSelectedBucket] = useState(null);
   const [currentPath, setCurrentPath] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleBucketChange = (bucket) => {
     setSelectedBucket(bucket);
     setCurrentPath('');
+    setSearchQuery('');
   };
 
   const handleNavigate = (path) => {
     setCurrentPath(path);
+    setSearchQuery('');
   };
 
   const handleUploadComplete = () => {
     setRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
   };
 
   return (
@@ -60,7 +68,7 @@ function App() {
   {/* Main Panel */}
   <section className="flex-1 overflow-y-auto space-y-5 pb-8">
     {/* Breadcrumbs */}
-    {selectedBucket && (
+    {selectedBucket && !searchQuery && (
       <div className="card bg-base-100 shadow-md rounded-xl">
         <div className="card-body p-5">
           <Breadcrumbs
@@ -71,8 +79,20 @@ function App() {
       </div>
     )}
 
-    {/* Upload Zone */}
+    {/* Search Bar */}
     {selectedBucket && (
+      <div className="card bg-base-100 shadow-md rounded-xl">
+        <div className="card-body p-5">
+          <SearchBar
+            onSearch={handleSearch}
+            isSearching={false}
+          />
+        </div>
+      </div>
+    )}
+
+    {/* Upload Zone */}
+    {selectedBucket && !searchQuery && (
       <div className="card bg-base-100 shadow-md rounded-xl">
         <div className="card-body p-6">
           <UploadZone
@@ -92,6 +112,7 @@ function App() {
           currentPath={currentPath}
           onNavigate={handleNavigate}
           refreshTrigger={refreshTrigger}
+          searchQuery={searchQuery}
         />
       </div>
     </div>

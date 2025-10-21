@@ -216,6 +216,68 @@ def download_file(bucket: str, key: str):
         )
 
 
+@app.get("/api/buckets/{bucket}/search")
+def search_objects(bucket: str, query: str = Query(...)):
+    """Search for objects in a bucket by key name (case-insensitive)"""
+    try:
+        if not query or not query.strip():
+            return {"files": [], "folders": []}
+
+        query_lower = query.lower().strip()
+
+        # List all objects in the bucket
+        all_objects = []
+        continuation_token = None
+
+        while True:
+            params = {"Bucket": bucket}
+            if continuation_token:
+                params["ContinuationToken"] = continuation_token
+
+            resp = s3.list_objects_v2(**params)
+
+            if "Contents" in resp:
+                all_objects.extend(resp["Contents"])
+
+            if not resp.get("IsTruncated"):
+                break
+
+            continuation_token = resp.get("NextContinuationToken")
+
+        # Filter objects that match the query
+        matched_files = []
+        matched_folders = set()
+
+        for obj in all_objects:
+            key = obj["Key"]
+            # Check if query appears in the key (case-insensitive)
+            if query_lower in key.lower():
+                matched_files.append(
+                    {
+                        "key": key,
+                        "size": obj["Size"],
+                        "lastModified": obj["LastModified"].isoformat(),
+                        "type": "file",
+                    }
+                )
+                
+                # Also collect parent folders of matched files
+                parts = key.split("/")
+                for i in range(len(parts) - 1):
+                    folder_path = "/".join(parts[: i + 1]) + "/"
+                    if query_lower in folder_path.lower():
+                        matched_folders.add(folder_path)
+
+        # Convert folders to list format
+        folders = [{"key": folder, "type": "folder"} for folder in sorted(matched_folders)]
+
+        return {"files": matched_files, "folders": folders}
+    except ClientError as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to search objects: {str(e)}"
+        )
+
+
 @app.delete("/api/buckets/{bucket}/objects/{key:path}")
 def delete_object(bucket: str, key: str):
     """Delete an object or folder from S3 bucket"""
