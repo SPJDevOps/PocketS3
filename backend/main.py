@@ -250,23 +250,23 @@ def search_objects(bucket: str, query: str = Query(...)):
 
         for obj in all_objects:
             key = obj["Key"]
-            # Check if query appears in the key (case-insensitive)
-            if query_lower in key.lower():
-                matched_files.append(
-                    {
-                        "key": key,
-                        "size": obj["Size"],
-                        "lastModified": obj["LastModified"].isoformat(),
-                        "type": "file",
-                    }
-                )
-                
-                # Also collect parent folders of matched files
-                parts = key.split("/")
-                for i in range(len(parts) - 1):
-                    folder_path = "/".join(parts[: i + 1]) + "/"
-                    if query_lower in folder_path.lower():
-                        matched_folders.add(folder_path)
+            
+            # Skip folder markers (keys ending with /)
+            if key.endswith("/"):
+                # This is a folder marker, add to folders if it matches
+                if query_lower in key.lower():
+                    matched_folders.add(key)
+            else:
+                # This is a file, check if it matches
+                if query_lower in key.lower():
+                    matched_files.append(
+                        {
+                            "key": key,
+                            "size": obj["Size"],
+                            "lastModified": obj["LastModified"].isoformat(),
+                            "type": "file",
+                        }
+                    )
 
         # Convert folders to list format
         folders = [{"key": folder, "type": "folder"} for folder in sorted(matched_folders)]
