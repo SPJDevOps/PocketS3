@@ -39,6 +39,22 @@ def list_buckets():
         raise HTTPException(status_code=500, detail=f"Failed to list buckets: {str(e)}")
 
 
+@app.post("/api/buckets")
+def create_bucket(bucket_name: str = Form(...), region: Optional[str] = Form(None)):
+    """Create a new S3 bucket with optional region"""
+    try:
+        params = {"Bucket": bucket_name}
+        
+        # Add region-specific configuration if provided
+        if region and region != os.environ.get("S3_REGION"):
+            params["CreateBucketConfiguration"] = {"LocationConstraint": region}
+        
+        s3.create_bucket(**params)
+        return {"message": "Bucket created successfully", "name": bucket_name}
+    except ClientError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create bucket: {str(e)}")
+
+
 @app.get("/api/buckets/{bucket}/objects")
 def list_objects(
     bucket: str, prefix: Optional[str] = Query(None), delimiter: str = Query("/")

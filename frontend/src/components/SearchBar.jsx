@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 
-export default function SearchBar({ onSearch, isSearching }) {
+export default function SearchBar({ onSearch, isSearching, value }) {
   const [inputValue, setInputValue] = useState('');
+
+  // Sync with external value prop (e.g., when cleared by parent)
+  useEffect(() => {
+    if (value === '' && inputValue !== '') {
+      setInputValue('');
+    }
+  }, [value]);
 
   useEffect(() => {
     // Debounce search input

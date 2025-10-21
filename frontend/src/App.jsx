@@ -20,8 +20,8 @@ function App() {
   };
 
   const handleNavigate = (path) => {
-    setCurrentPath(path);
     setSearchQuery('');
+    setCurrentPath(path);
   };
 
   const handleUploadComplete = () => {
@@ -86,6 +86,7 @@ function App() {
           <SearchBar
             onSearch={handleSearch}
             isSearching={false}
+            value={searchQuery}
           />
         </div>
       </div>
