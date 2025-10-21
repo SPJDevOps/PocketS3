@@ -5,6 +5,12 @@ A simple, modern web-based S3 browser that allows you to browse, upload, downloa
 ![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
 [![GitHub Container Registry](https://img.shields.io/badge/ghcr-available-green.svg)](https://github.com/users/YOUR-USERNAME/packages/container/package/s3-browser)
 
+## Screenshot
+
+![PocketS3 Interface](screenshots/app-screenshot.png)
+
+A clean, modern interface for browsing and managing your S3 buckets with drag-and-drop uploads, hierarchical folder navigation, and intuitive file management.
+
 ## Features
 
 - **Browse S3 Buckets** - View all your buckets and navigate through folders
