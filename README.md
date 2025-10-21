@@ -4,6 +4,8 @@ A simple, modern web-based S3 browser that allows you to browse, upload, downloa
 
 ![Docker](https://img.shields.io/badge/docker-ready-blue.svg)
 [![GitHub Container Registry](https://img.shields.io/badge/ghcr-available-green.svg)](https://github.com/SPJDevOps/PocketS3/pkgs/container/pockets3)
+![daisyUI](https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white)
+![FastAPI](https://img.shields.io/badge/fastapi-109989?style=for-the-badge&logo=FASTAPI&logoColor=white)
 
 ## Screenshot
 
