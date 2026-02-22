@@ -7,7 +7,7 @@ COPY frontend .
 RUN npm run build
 
 # --- Build backend ---
-FROM python:3.13-slim
+FROM python:3.14-slim
 WORKDIR /app
 
 COPY backend/requirements.txt ./backend/requirements.txt
